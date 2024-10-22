@@ -132,4 +132,5 @@
    "*Messages*"
    "*Backtrace*"
    "*Warnings*"
-   "*Async-native-compile-log"))
+   "*Async-native-compile-log"
+   "*Completions*"))

@@ -1,109 +1,102 @@
 ;; -*- lexical-binding: t -*-
 
-; DOES IT REALLY WORK
 (setq package-native-compile t)
 
-; FUCKING CUSTOM
-(setq custom-file (concat user-emacs-directory "custom.el"))
+(setq custom-file (concat user-emacs-directory "garbage/custom.el"))
 ;(load custom-file 'noerror)
 
-; NO STARTUP SCREEN
 (setq inhibit-startup-screen 1)
 
-; SOME SHIT GONE
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (tool-bar-mode 0)
 (tooltip-mode 0)
 
-; STOP IT
 (setq make-backup-files nil)
 
-; LINE NUMBERS LESSGO
+(put 'upcase-region 'disabled nil)
+
+(add-hook 'after-init-hook
+	  (lambda ()
+	    (set-face-attribute 'default nil :family "Fira Code" :height 140)))
+
+(setq whitespace-style
+      '(face tabs spaces
+	    trailing lines space-before-tab indentation empty
+	    space-after-tab space-mark tab-mark missing-newline-at-eof))
+
+(global-whitespace-mode 1)
+
 (setq display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook
 	  (lambda () (display-line-numbers-mode 1)))
 
-; PARENS
 (show-paren-mode 1)
-
-; WHAT TO SHOW
-(setq whitespace-style '(face spaces empty tabs trailing space-mark tab-mark))
 
 (require 'package)
 (package-initialize)
-
-; PACKAGE SOURCES
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
-; MY THEME
-(unless (package-installed-p 'sublime-themes)
-  (package-refresh-contents)
-  (package-install 'sublime-themes))
+(add-to-list 'load-path (concat user-emacs-directory "modus-themes"))
+(require 'modus-themes)
 
-(require 'sublime-themes)
-(load-theme 'spolsky 1)
+(mapc #'disable-theme custom-enabled-themes)
 
-;; (unless (package-installed-p 'timu-rouge-theme)
-;;   (package-refresh-contents)
-;;   (package-install 'timu-rouge-theme))
+;;--------------------------
+;; MODE LINE CONFIGURATION |
+;;--------------------------
 
-;; (require 'timu-rouge-theme)
-;; (load-theme 'timu-rouge)
+(defface my-mode-line-file-changed
+  '((t :foreground "#7f0f3a" :inherit bold))
+  "Face with red foreground indicating that file has changed.")
 
-;; WHITESPACES LESSGO
-(global-whitespace-mode 1)
+(defface my-mode-line-file-not-changed
+  '((t :foreground "#3a7f0f" :inherit bold))
+  "Face with green foreground indicating that file has not changed.")
 
-;; (setq whitespace-display-mappings
-;;       '((space-mark 32 [183] [46])
-;;         (newline-mark ?\n [172 ?\n] [36 ?\n])
-;;         (newline-mark ?\r [182] [35])
-;;         (tab-mark ?\t [8608 ?\t] [62 ?\t])))
+(defvar-local my-mode-line-buffer-name
+    '(:eval
+      (propertize (buffer-name) 'face 'bold)))
 
-(require 'color)
-(let* ((ws-lighten 70)
-       (ws-color (color-darken-name "grey" ws-lighten)))
-   (set-face-foreground 'whitespace-space                  ws-color)
-   (set-face-foreground 'whitespace-space-after-tab        ws-color)
-   (set-face-foreground 'whitespace-space-before-tab       ws-color)
-   (set-face-foreground 'whitespace-tab                    ws-color)
-   (set-face-foreground 'whitespace-trailing               ws-color)
-   (set-face-background 'whitespace-space                  "#000000ff")
-   (set-face-background 'whitespace-space-after-tab        "#000000ff")
-   (set-face-background 'whitespace-space-before-tab       "#000000ff")
-   (set-face-background 'whitespace-tab                    "#000000ff")
-   (set-face-background 'whitespace-trailing               "#000000ff"))
+(defvar-local my-mode-line-file-changed-indicator
+    '(:eval
+      (if (buffer-modified-p)
+	  (propertize "***" 'face 'my-mode-line-file-changed)
+	(propertize "---" 'face 'my-mode-line-file-not-changed))))
 
-(set-face-foreground 'line-number              "#770096")
-(set-face-background 'line-number-current-line "#4a1758")
-(set-face-foreground 'line-number-current-line "#c339e9")
-(set-face-bold-p 'line-number-current-line 't)
+(put 'my-mode-line-buffer-name 'risky-local-variable t)
+(put 'my-mode-line-file-changed-indicator 'risky-local-variable t)
 
-(add-hook 'after-init-hook
-	  (lambda () (set-face-attribute 'default nil :family "Fira Code" :height 140)))
+(setq-default mode-line-format
+	      '(" "
+		" "
+		my-mode-line-file-changed-indicator
+		" : "
+		my-mode-line-buffer-name))
 
-;; (add-to-list 'default-frame-alist '(font . "Fira Code") '(height . 160))
+(setq modus-themes-common-palette-overrides
+      '((fg-line-number-inactive "gray50")
+        (fg-line-number-active fg-main)
+        (bg-line-number-inactive unspecified)
+        (bg-line-number-active unspecified)
+        (border-mode-line-active bg-mode-line-active)
+        (border-mode-line-inactive bg-mode-line-inactive)
+        (fringe unspecified)))
 
-; U KNOW IT
-(column-number-mode 1)
+(load-theme 'modus-vivendi :no-confirm)
 
 (unless (package-installed-p 'magit)
   (package-refresh-contents)
   (package-install 'magit))
 (require 'magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-; ----------------------------------------
 
 (defun c-config-hook ()
   (setq c-basic-offset 4)
   (setq indent-tabs-mode nil))
 
 (add-hook 'c-mode-hook 'c-config-hook)
-
-(put 'upcase-region 'disabled nil)
-
-; ----------------------------------------
 
 (unless (package-installed-p 'undo-tree)
   (package-refresh-contents)
@@ -116,26 +109,20 @@
 (add-hook 'undo-tree-mode-hook 'undo-tree-config-hook)
 (global-undo-tree-mode 1)
 
-; ----------------------------------------
-
-(add-to-list 'load-path "~/.emacs.d/my-stuff/")
+(add-to-list 'load-path (concat user-emacs-directory "my-stuff"))
 (require 'greeting)
 (greeting-buffer)
 
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-
 (require 'ibuf-ext)
 (add-to-list 'ibuffer-never-show-predicates "^\\*")
-
-; ----------------------------------------
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (require 'ido)
 (ido-mode 'buffers)
-(defun ido-mode-ignore-buffers (bufs)
-  (cond ((null bufs) '())
-	('t (save-excursion (add-to-list 'ido-ignore-buffers
-					 (car bufs))
-			    (ido-mode-ignore-buffers (cdr bufs))))))
+
+(defun ido-mode-ignore-buffers (lst-of-buffers)
+  (setq ido-ignore-buffers (append ido-ignore-buffers lst-of-buffers)))
+
 (ido-mode-ignore-buffers
  '("*readonly*"
    "*scratch*"
@@ -144,7 +131,6 @@
    "*Warnings*"
    "*Async-native-compile-log"
    "*Completions*"))
-; ----------------------------------------
 
 (unless (package-installed-p 'ggtags)
   (package-refresh-contents)
@@ -159,14 +145,14 @@
 (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
 (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
 
-; ----------------------------------------
-
 (unless (package-installed-p 'language-detection)
   (package-refresh-contents)
   (package-install 'language-detection))
 (require 'language-detection)
 
+(add-to-list 'load-path (concat user-emacs-directory "eww-language-detection"))
 (require 'eww-language-detection)
+
 (setq
  shr-use-fonts  nil
  shr-indentation 10)
@@ -185,7 +171,6 @@
 (add-hook 'c++-mode-hook 'c++-config-hook)
 (add-hook 'c++-ts-mode-hook 'c++-config-hook)
 
-; ----------------------------------------
 (unless (package-installed-p 'go-translate)
   (package-refresh-contents)
   (package-install 'go-translate))
@@ -197,7 +182,6 @@
        :engines (list (gt-google-engine) (gt-bing-engine))
        :render  (gt-buffer-render)))
 
-; ----------------------------------------
 (unless (package-installed-p 'pdf-tools)
   (package-refresh-contents)
   (package-install 'pdf-tools))

@@ -1,4 +1,4 @@
-(provide 'my-elfeed-conf)
+(provide 'vash-elfeed-conf)
 
 (setq-default elfeed-search-filter "@1-month-ago -junk +unread ")
 

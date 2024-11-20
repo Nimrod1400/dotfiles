@@ -25,11 +25,14 @@
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
+(add-to-list 'load-path (concat user-emacs-directory "vash"))
+
 ;;--------------
 ;; SOME VISUALS |
 ;;--------------
 
 (setq my-prefered-max-line-length 80)
+
 (setq whitespace-line-column my-prefered-max-line-length)
 
 (add-hook 'display-fill-column-indicator-mode-hook
@@ -57,60 +60,7 @@
 ;; MODE LINE CONFIGURATION |
 ;;-------------------------
 
-(defface my-mode-line-file-changed
-  '((t :foreground "#7f0f3a" :inherit bold))
-  "Face with red foreground indicating that file has changed.")
-
-(defface my-mode-line-file-not-changed
-  '((t :foreground "#3a7f0f" :inherit bold))
-  "Face with green foreground indicating that file has not changed.")
-
-(defvar-local my-mode-line-buffer-name
-    '(:eval
-      (propertize (buffer-name) 'face 'bold)))
-
-(defvar-local my-mode-line-file-changed-indicator
-    '(:eval
-      (if (buffer-modified-p)
-          (propertize "***" 'face 'my-mode-line-file-changed)
-          (propertize "---" 'face 'my-mode-line-file-not-changed))))
-
-(defvar-local my-mode-line-input-method-indicator
-    '(:eval
-      (propertize
-       (if current-input-method-title
-           current-input-method-title
-         "DEFAULT")
-       'face
-       'bold)))
-
-(defvar-local my-mode-line-major-mode-indicator
-    '(:eval
-      (propertize (substring-no-properties (format-mode-line mode-name))
-                  'face
-                  'empty)))
-
-(substring-no-properties (format-mode-line mode-name))
-
-(put 'my-mode-line-buffer-name 'risky-local-variable t)
-(put 'my-mode-line-file-changed-indicator 'risky-local-variable t)
-(put 'my-mode-line-input-method-indicator 'risky-local-variable t)
-(put 'my-mode-line-major-mode-indicator 'risky-local-variable t)
-
-(setq-default mode-line-format
-              '(" "
-                " "
-                my-mode-line-file-changed-indicator
-                " : "
-                my-mode-line-buffer-name
-                " "
-                "("
-                my-mode-line-major-mode-indicator
-                ")"
-                " "
-                " : "
-                my-mode-line-input-method-indicator
-                ))
+(require 'vash-mode-line-config)
 
 ;;----------------------------
 ;; MODUS THEMES CONFIGURATION |
@@ -121,20 +71,7 @@
 
 (mapc #'disable-theme custom-enabled-themes)
 
-(setq modus-themes-common-palette-overrides
-      '((fg-line-number-inactive "gray50")
-        (fg-line-number-active fg-main)
-        (bg-line-number-inactive unspecified)
-        (bg-line-number-active unspecified)
-        (border-mode-line-active bg-mode-line-active)
-        (border-mode-line-inactive bg-mode-line-inactive)
-        (fringe unspecified)))
-
-(setq modus-vivendi-palette-overrides
-      '((fg-space "gray23")))
-
-(setq modus-operandi-palette-overrides
-      '((fg-space "gray73")))
+(require 'vash-modus-themes-config)
 
 (load-theme 'modus-vivendi :no-confirm)
 
@@ -179,9 +116,8 @@
 (add-hook 'undo-tree-mode-hook 'undo-tree-config-hook)
 (global-undo-tree-mode 1)
 
-(add-to-list 'load-path (concat user-emacs-directory "my-stuff"))
-(require 'greeting)
-(greeting-buffer)
+(require 'vash-greeting)
+(vash-open-greeting-buffer)
 
 (require 'ibuf-ext)
 ;; (add-to-list 'ibuffer-never-show-predicates "^\\*")
@@ -244,18 +180,18 @@
   (package-install 'elfeed))
 (require 'elfeed)
 
-(require 'my-elfeed-conf)
+(require 'vash-elfeed-conf)
 
 (unless (package-installed-p 'denote)
   (package-refresh-contents)
   (package-install 'denote))
 (require 'denote)
 
-(require 'my-denote-conf)
+(require 'vash-denote-conf)
 
-;;---------------------------
-;; LANGUAGE SPECIFIG CONFIGS |
-;;---------------------------
+;;---------------------------------
+;; LANGUAGE SPECIFIG CONFIGURATION |
+;;---------------------------------
 
 (defun emacs-lisp-config-hook ()
   (setq indent-tabs-mode nil))

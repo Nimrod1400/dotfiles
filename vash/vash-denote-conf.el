@@ -1,4 +1,4 @@
-(provide 'my-denote-conf)
+(provide 'vash-denote-conf)
 
 (setq denote-known-keywords
       '(programming

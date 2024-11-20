@@ -1,5 +1,9 @@
 ;; -*- lexical-binding: t -*-
 
+;;-----------------
+;; NECESSARY STUFF |
+;;-----------------
+
 (setq package-native-compile t)
 
 (setq custom-file (concat user-emacs-directory "garbage/custom.el"))
@@ -17,35 +21,41 @@
 
 (put 'upcase-region 'disabled nil)
 
+(require 'package)
+(package-initialize)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
+;;--------------
+;; SOME VISUALS |
+;;--------------
+
+(setq my-prefered-max-line-length 80)
+(setq whitespace-line-column my-prefered-max-line-length)
+
+(add-hook 'display-fill-column-indicator-mode-hook
+          (lambda () (setq fill-column my-prefered-max-line-length)))
+
 (add-hook 'after-init-hook
-	  (lambda ()
-	    (set-face-attribute 'default nil :family "Fira Code" :height 140)))
+          (lambda ()
+            (set-face-attribute 'default nil :family "Fira Code" :height 140)))
 
 (setq whitespace-style
       '(face tabs spaces
-	    trailing lines space-before-tab indentation empty
-	    space-after-tab space-mark tab-mark missing-newline-at-eof))
+             trailing lines space-before-tab indentation empty
+             space-after-tab space-mark tab-mark missing-newline-at-eof))
 
 (global-whitespace-mode 1)
 
 (setq display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook
-	  (lambda () (display-line-numbers-mode 1)))
+          (lambda () (display-line-numbers-mode 1)
+            (display-fill-column-indicator-mode 1)))
 
 (show-paren-mode 1)
 
-(require 'package)
-(package-initialize)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-
-(add-to-list 'load-path (concat user-emacs-directory "modus-themes"))
-(require 'modus-themes)
-
-(mapc #'disable-theme custom-enabled-themes)
-
-;;--------------------------
+;;-------------------------
 ;; MODE LINE CONFIGURATION |
-;;--------------------------
+;;-------------------------
 
 (defface my-mode-line-file-changed
   '((t :foreground "#7f0f3a" :inherit bold))
@@ -62,18 +72,54 @@
 (defvar-local my-mode-line-file-changed-indicator
     '(:eval
       (if (buffer-modified-p)
-	  (propertize "***" 'face 'my-mode-line-file-changed)
-	(propertize "---" 'face 'my-mode-line-file-not-changed))))
+          (propertize "***" 'face 'my-mode-line-file-changed)
+          (propertize "---" 'face 'my-mode-line-file-not-changed))))
+
+(defvar-local my-mode-line-input-method-indicator
+    '(:eval
+      (propertize
+       (if current-input-method-title
+           current-input-method-title
+         "DEFAULT")
+       'face
+       'bold)))
+
+(defvar-local my-mode-line-major-mode-indicator
+    '(:eval
+      (propertize (substring-no-properties (format-mode-line mode-name))
+                  'face
+                  'empty)))
+
+(substring-no-properties (format-mode-line mode-name))
 
 (put 'my-mode-line-buffer-name 'risky-local-variable t)
 (put 'my-mode-line-file-changed-indicator 'risky-local-variable t)
+(put 'my-mode-line-input-method-indicator 'risky-local-variable t)
+(put 'my-mode-line-major-mode-indicator 'risky-local-variable t)
 
 (setq-default mode-line-format
-	      '(" "
-		" "
-		my-mode-line-file-changed-indicator
-		" : "
-		my-mode-line-buffer-name))
+              '(" "
+                " "
+                my-mode-line-file-changed-indicator
+                " : "
+                my-mode-line-buffer-name
+                " "
+                "("
+                my-mode-line-major-mode-indicator
+                ")"
+                " "
+                " : "
+                my-mode-line-input-method-indicator
+                ))
+
+;;----------------------------
+;; MODUS THEMES CONFIGURATION |
+;;----------------------------
+
+(add-to-list 'load-path (concat user-emacs-directory "modus-themes"))
+(require 'modus-themes)
+
+(mapc #'disable-theme custom-enabled-themes)
 
 (setq modus-themes-common-palette-overrides
       '((fg-line-number-inactive "gray50")
@@ -84,19 +130,43 @@
         (border-mode-line-inactive bg-mode-line-inactive)
         (fringe unspecified)))
 
+(setq modus-vivendi-palette-overrides
+      '((fg-space "gray23")))
+
+(setq modus-operandi-palette-overrides
+      '((fg-space "gray73")))
+
 (load-theme 'modus-vivendi :no-confirm)
+
+;;---------------
+;; SOME PACKAGES |
+;;---------------
+
+(unless (package-installed-p 'orderless)
+  (package-refresh-contents)
+  (package-install 'orderless))
+(require 'orderless)
+
+(setq completion-styles '(orderless basic)
+      completion-category-overrides '((file (styles basic partial-completion))))
+
+(unless (package-installed-p 'vertico)
+  (package-refresh-contents)
+  (package-install 'vertico))
+(require 'vertico)
+(vertico-mode)
+
+(unless (package-installed-p 'marginalia)
+  (package-refresh-contents)
+  (package-install 'marginalia))
+(require 'marginalia)
+(marginalia-mode)
 
 (unless (package-installed-p 'magit)
   (package-refresh-contents)
   (package-install 'magit))
 (require 'magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-
-(defun c-config-hook ()
-  (setq c-basic-offset 4)
-  (setq indent-tabs-mode nil))
-
-(add-hook 'c-mode-hook 'c-config-hook)
 
 (unless (package-installed-p 'undo-tree)
   (package-refresh-contents)
@@ -114,23 +184,20 @@
 (greeting-buffer)
 
 (require 'ibuf-ext)
-(add-to-list 'ibuffer-never-show-predicates "^\\*")
+;; (add-to-list 'ibuffer-never-show-predicates "^\\*")
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-(require 'ido)
-(ido-mode 'buffers)
+;; (defun ido-mode-ignore-buffers (lst-of-buffers)
+;;   (setq ido-ignore-buffers (append ido-ignore-buffers lst-of-buffers)))
 
-(defun ido-mode-ignore-buffers (lst-of-buffers)
-  (setq ido-ignore-buffers (append ido-ignore-buffers lst-of-buffers)))
-
-(ido-mode-ignore-buffers
- '("*readonly*"
-   "*scratch*"
-   "*Messages*"
-   "*Backtrace*"
-   "*Warnings*"
-   "*Async-native-compile-log"
-   "*Completions*"))
+;; (ido-mode-ignore-buffers
+;;  '("*readonly*"
+;;    "*scratch*"
+;;    "*Messages*"
+;;    "*Backtrace*"
+;;    "*Warnings*"
+;;    "*Async-native-compile-log"
+;;    "*Completions*"))
 
 (unless (package-installed-p 'ggtags)
   (package-refresh-contents)
@@ -152,24 +219,8 @@
 
 (add-to-list 'load-path (concat user-emacs-directory "eww-language-detection"))
 (require 'eww-language-detection)
-
-(setq
- shr-use-fonts  nil
- shr-indentation 10)
-
-(defun my/open-cppreference-headers ()
-  (interactive)
-  (eww-open-file "~/Documents/cppreference/reference/en/index.html"))
-
-(defun c++-config-hook ()
-  (setq c-basic-offset 4)
-  (setq c-ts-mode-indent-offset 4)
-  (setq c-ts-mode-indent-style 'k&r)
-  (setq indent-tabs-mode nil)
-  (local-set-key (kbd "C-c C-r") 'my/open-cppreference-headers))
-
-(add-hook 'c++-mode-hook 'c++-config-hook)
-(add-hook 'c++-ts-mode-hook 'c++-config-hook)
+(setq shr-use-fonts nil
+      shr-indentation 10)
 
 (unless (package-installed-p 'go-translate)
   (package-refresh-contents)
@@ -194,3 +245,44 @@
 (require 'elfeed)
 
 (require 'my-elfeed-conf)
+
+(unless (package-installed-p 'denote)
+  (package-refresh-contents)
+  (package-install 'denote))
+(require 'denote)
+
+(require 'my-denote-conf)
+
+;;---------------------------
+;; LANGUAGE SPECIFIG CONFIGS |
+;;---------------------------
+
+(defun emacs-lisp-config-hook ()
+  (setq indent-tabs-mode nil))
+(add-hook 'emacs-lisp-mode-hook 'emacs-lisp-config-hook)
+
+(defun c-config-hook ()
+  (setq c-basic-offset 4)
+  (setq indent-tabs-mode nil))
+(add-hook 'c-mode-hook 'c-config-hook)
+
+(defun my-open-cppreference-headers ()
+  (interactive)
+  (eww-open-file "~/Documents/cppreference/reference/en/index.html"))
+
+(defun c++-config-hook ()
+  (setq c-basic-offset 4)
+  (setq c-ts-mode-indent-offset 4)
+  (setq c-ts-mode-indent-style 'k&r)
+  (setq indent-tabs-mode nil)
+  (local-set-key (kbd "C-c C-r") 'my-open-cppreference-headers))
+(add-hook 'c++-mode-hook 'c++-config-hook)
+(add-hook 'c++-ts-mode-hook 'c++-config-hook)
+
+;;-------------------
+;; STUFF FOR RUSSIAN |
+;;-------------------
+
+(set-input-method 'russian-computer)
+(toggle-input-method)
+

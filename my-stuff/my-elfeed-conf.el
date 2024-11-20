@@ -22,7 +22,6 @@
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UC2eYFnH61tmytImy1mTYvhA" youtube) ;Luke Smith
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCSHZKyawb77ixDdsGog4iWA" youtube) ;Lex Fridman
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCQ-W1KE9EYfdxhL6S4twUNw" youtube) ;The Cherno
-	("https://www.youtube.com/feeds/videos.xml?channel_id=UCMN0a7GHQnC6H74SmCGSmdw" youtube) ;You Suck at Programming
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCnN-3GfVjuEIHYo39HfhB1Q" youtube) ;Russel Walter
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCN__G2hSqRKuqedN3M0JCDg" youtube) ;Andrewism
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UC0IwscwvxdXf4z437ZmXxlg" youtube) ;David Hart
@@ -37,6 +36,7 @@
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCEbS5GE-OOsvRhn21Hw_fGQ" youtube) ;Code Persist
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCQvW_89l7f-hCMP1pzGm4xw" youtube) ;Nathan Baggs
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UC7YOGHUfC1Tb6E4pudI9STA" youtube) ;Mental Outlaw
+	("https://www.youtube.com/feeds/videos.xml?channel_id=UCMlGfpWw-RUdWX_JbLCukXg" youtube) ;CppCon
 
 	; ("https://www.youtube.com/feeds/videos.xml?channel_id=" youtube) ;
 	("https://drewdevault.com/blog/index.xml"       it blog)

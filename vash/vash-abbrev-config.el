@@ -1,0 +1,2 @@
+(provide 'vasj-abbrev-config)
+

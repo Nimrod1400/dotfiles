@@ -26,7 +26,6 @@
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCN__G2hSqRKuqedN3M0JCDg" youtube) ;Andrewism
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UC0IwscwvxdXf4z437ZmXxlg" youtube) ;David Hart
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8C7TNs2ohrc6hnRQ5Sn2w" youtube) ;Programmers are also human
-	("https://www.youtube.com/feeds/videos.xml?channel_id=UCgd5-BWtbgOw5Hx2wP3qxzg" youtube) ;Cyb3rMaddy
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCxa8XPOhu4iA6Lon71TJ0rg" youtube) ;Ampersand
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCR6LasBpceuYUhuLToKBzvQ" youtube) ;Solar Sands
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCxSiyTe60iQAY1UqCylNMmw" youtube) ;Linux Renaissance
@@ -34,22 +33,25 @@
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UC2WHjPDvbE6O328n17ZGcfg" youtube) ;ForrestKnight
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCxHAlbZQNFU2LgEtiqd2Maw" youtube) ;C++ Weekly With Jason Turner
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCEbS5GE-OOsvRhn21Hw_fGQ" youtube) ;Code Persist
-	("https://www.youtube.com/feeds/videos.xml?channel_id=UCQvW_89l7f-hCMP1pzGm4xw" youtube) ;Nathan Baggs
-	("https://www.youtube.com/feeds/videos.xml?channel_id=UC7YOGHUfC1Tb6E4pudI9STA" youtube) ;Mental Outlaw
 	("https://www.youtube.com/feeds/videos.xml?channel_id=UCMlGfpWw-RUdWX_JbLCukXg" youtube) ;CppCon
-
+	("https://www.youtube.com/feeds/videos.xml?channel_id=UCnhDCF3Slf9MlmYGIr47y-g" youtube) ;LinuxTechGeek
+	("https://www.youtube.com/feeds/videos.xml?channel_id=UCrx2zrPjhGRi9TwszZiLwEg" youtube) ;Horses
+	("https://www.youtube.com/feeds/videos.xml?channel_id=UChkC4u4KdnIDFh9hPqExLDg" youtube) ;Low Level Game Dev
 	; ("https://www.youtube.com/feeds/videos.xml?channel_id=" youtube) ;
-	("https://drewdevault.com/blog/index.xml"       it blog)
-	("https://grishaev.me/feed.xml"                 it blog)
-	("http://nullprogram.com/feed/"                 it blog)
-	("https://danielsieger.com/atom.xml"            it blog)
-	("https://lukesmith.xyz/index.xml"              it blog)
-	("https://www.gingerbill.org/article/index.xml" it blog)
-	("https://andrewkelley.me/rss.xml"              it blog)
-	("https://harelang.org/blog//index.xml"         it blog language)
-	("https://poview.org/index.xml"                 it blog)
-	("https://protesilaos.com/master.xml"           it blog)
+
+	("https://archlinux.org/feeds/news/"            it read)
+	("https://grishaev.me/feed.xml"                 it blog read)
+	("http://nullprogram.com/feed/"                 it blog read)
+	("https://danielsieger.com/atom.xml"            it blog read)
+	("https://lukesmith.xyz/index.xml"              it blog read)
+	("https://www.gingerbill.org/article/index.xml" it blog read)
+	("https://andrewkelley.me/rss.xml"              it blog read)
+	("https://poview.org/index.xml"                 it blog read)
+	("https://protesilaos.com/master.xml"           it blog read)
 	("https://xkcd.com/rss.xml"                     haha comics)
+
+	; ("https://drewdevault.com/blog/index.xml"       it blog read)
+	; ("https://harelang.org/blog//index.xml"         it blog language read)
 
 	("https://leastaction.writeas.com/feed/" blog)
 	))

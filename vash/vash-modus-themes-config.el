@@ -10,7 +10,7 @@
         (fringe unspecified)))
 
 (setq modus-vivendi-palette-overrides
-      '((fg-space "gray23")))
+      '((fg-space "gray17")))
 
 (setq modus-operandi-palette-overrides
       '((fg-space "gray73")))

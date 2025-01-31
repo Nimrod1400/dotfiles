@@ -1,5 +1,10 @@
 (provide 'vash-meow-mode-config)
 
+(unless (package-installed-p 'meow)
+  (package-refresh-contents)
+  (package-install 'meow))
+(require 'meow)
+
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-overwrite-define-key
@@ -68,7 +73,6 @@
    '("O" . meow-to-block)
    '("p" . meow-yank)
    '("q" . meow-quit)
-   '("Q" . meow-goto-line)
    '("r" . meow-replace)
    '("R" . meow-swap-grab)
    '("s" . meow-kill)
@@ -85,12 +89,16 @@
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("<escape>" . ignore)))
-(require 'meow)
 
 (meow-setup)
 (meow-global-mode 1)
 
 (setq meow-use-clipboard 't)
-(setq meow-keypad-describe-delay 0.0)
+(setq meow-keypad-describe-delay 0)
+(setq meow-expand-hint-remove-delay 0)
 (setq meow-keypad-self-insert-undefined nil)
-(setq meow-expand-hint-remove-delay 0.0)
+
+
+;; TODO:
+;; 1: faces
+;; 2: [ and ]

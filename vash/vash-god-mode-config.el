@@ -2,14 +2,14 @@
 
 ;; TODO:
 ;; 1. C-x <space> - DONE
-;; 2. Completion framework
+;; 2. Completion framework (CORFU)
 ;; 3. indicate that isearch is now on in god mode - DONE
 ;; 4. map C-g to exit isearch - DONE
 ;; 5. back and forth by word with single keystroke - DONE
 ;; 6. turn off C-x C-c - DONE
 ;; 7. turn off god mode echoing - DONE
 ;; 8. till/find like in meow-mode
-;; 9. templates for C++
+;; 9. templates for C++ (tempo / tempo-snippets)
 
 (require 'god-mode)
 
@@ -58,4 +58,3 @@ in isearch-buffer or is it not")
 
 (add-hook 'isearch-mode-hook
           (lambda () (god-isearch-mode -1)))
-

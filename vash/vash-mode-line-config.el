@@ -1,27 +1,25 @@
 (provide 'vash-mode-line-config)
 
+; TODO: move faces definitions to separate variables, don't inline.
+
+;; (defface vash-mode-line-god-mode-enabled-face
+;;   '((t :weight ultra-bold :slant italic :inherit success))
+;;     "Face for a string representing enabled god-mode")
+
+;; (defface vash-mode-line-god-mode-disabled-face
+;;   '((t :weight bold :slant italic :inherit warning))
+;;     "Face for a string representing disabled god-mode")
+
 (defvar-local vash-mode-line-spacer "  ")
 
-(defvar-local vash-mode-line-meow-icon
-  (propertize "" 'face 'warning))
+;; (defvar-local vash-mode-line-god-mode-indicator
+;;     '(:eval
+;;       (if god-local-mode
+;;           (propertize "† GOD †" 'face 'vash-mode-line-god-mode-enabled-face)
+;;         (propertize "_ MAN _" 'face 'vash-mode-line-god-mode-disabled-face))))
 
 (defvar-local vash-mode-line-meow-mode-indicator
-      '(:eval
-        (when (mode-line-window-selected-p)
-          (let* ((state (meow--current-state))
-                 (state-name (meow--get-state-name state))
-                 (state-name-faced (propertize state-name
-                                               'face
-                                               'bold)))
-            (concat vash-mode-line-meow-icon
-                    " : "
-                    state-name-faced)))))
-
-(defvar-local vash-mode-line-god-mode-indicator
-    '(:eval
-      (if god-local-mode
-          (propertize "GOD" 'face '((t :inherit 'success :inherit 'italic)))
-        (propertize "MAN" 'face '((t :inherit 'warning :inherit 'italic))))))
+    '(:eval (meow-indicator)))
 
 (defvar-local vash-mode-line-buffer-name-indicator
     '(:eval
@@ -68,8 +66,8 @@
 
 (let ((risky-variables-list
        (list 'vash-mode-line-isearch-indicator
-             'vash-mode-line-god-mode-indicator
-             ;; 'vash-mode-line-meow-mode-indicator
+             ;; 'vash-mode-line-god-mode-indicator
+             'vash-mode-line-meow-mode-indicator
              'vash-mode-line-spacer
              'vash-mode-line-buffer-icon
              'vash-mode-line-file-changed-indicator
@@ -81,7 +79,8 @@
 
 (setq-default mode-line-format
               '(" "
-                vash-mode-line-god-mode-indicator
+                ;; vash-mode-line-god-mode-indicator
+                vash-mode-line-meow-mode-indicator
                 vash-mode-line-spacer
                 vash-mode-line-file-changed-indicator
                 " : "

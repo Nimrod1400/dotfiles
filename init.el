@@ -196,10 +196,6 @@
   (setq indent-tabs-mode nil))
 (add-hook 'c-mode-hook 'c-config-hook)
 
-;; (keymap-unset c-mode-map "C-c C-a")
-;; (define-key c-mode-map (kbd "C-c C-a") nil)
-;; (define-key c++-mode-map (kbd "C-c C-a") nil)
-
 (defun c++-config-hook ()
   (ggtags-mode 1)
   (setq c-basic-offset 4)
@@ -241,11 +237,8 @@
 ;; ------------
 
 (keymap-unset global-map "C-x f")
-(keymap-set global-map "C-," #'backward-word)
 
 (keymap-unset global-map "C-x C-c")
-(keymap-set global-map "C-c C-r" #'rectangle-mark-mode)
-(keymap-set global-map "C-." #'forward-word)
 
 (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
 (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
@@ -255,14 +248,57 @@
 (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
 (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
 
-(global-set-key (kbd "C-x C-1") #'delete-other-windows)
-(global-set-key (kbd "C-x C-2") #'split-window-below)
-(global-set-key (kbd "C-x C-3") #'split-window-right)
-(global-set-key (kbd "C-x C-0") #'delete-window)
+(defun mark-list-guts ()
+  (interactive)
+  (backward-up-list)
+  (forward-list)
+  (push-mark (point) nil t)
+  (backward-list))
 
-;; ---------------
-;; NEKO NEKO NEKO |
-;; ---------------
+(keymap-set global-map "C-c m d" #'mark-defun)
+(keymap-set global-map "C-c m p" #'mark-list-guts)
 
-; (require 'vash-meow-mode-config)
-(require 'vash-god-mode-config)
+(keymap-set global-map "C-c C-r" #'rectangle-mark-mode)
+
+(defvar my-keys-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    (keymap-set map "C-," #'backward-word)
+    (keymap-set map "C-." #'forward-word)
+    map)
+  "my-keys-minor-mode keymap.")
+
+(define-minor-mode my-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  :init-value t
+  :lighter " my-keys")
+
+(my-keys-minor-mode 1)
+
+;; -----------
+;; -GOD- MEOW |
+;; -----------
+
+(require 'vash-meow-mode-config)
+;; (require 'vash-god-mode-config)
+
+;; ----------
+;; PRO STUFF |
+;; ----------
+
+(add-to-list 'save-some-buffers-action-alist
+             (list "d"
+                   (lambda (buffer) (diff-buffer-with-file (buffer-file-name buffer)))
+                   "show diff between the buffer and its file"))
+
+(setq tab-bar-close-button-show nil)
+(setq tab-bar-new-button-show nil)
+(setq tab-bar-separator "")
+(setq tab-bar-show 1)
+
+(global-set-key (kbd "C-x t p") 'tab-bar-switch-to-next-tab)
+(global-set-key (kbd "C-x t o") 'tab-bar-switch-to-prev-tab)
+
+(tab-bar-mode 1)
+
+(require 'vash-abbrev-config)
+(require 'vash-rmail-config)
